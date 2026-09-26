@@ -84,24 +84,17 @@ $timer = New-Object System.Windows.Threading.DispatcherTimer
 $timer.Interval = [TimeSpan]::FromSeconds(2)
 
 $UpdateUI = {
-    $service = Get-Service -Name "OctoPrint" -ErrorAction SilentlyContinue
-    if ($service) {
-        if ($service.Status -eq "Running") {
-            $txtServiceStatus.Text = "RODANDO"
-            $txtServiceStatus.Foreground = "#107C10"
-            $txtBtnRestart.Text = "REINICIAR SERVICO"
-            $txtBtnRestart.Foreground = "#D83B01"
-        } else {
-            $txtServiceStatus.Text = "PARADO"
-            $txtServiceStatus.Foreground = "#D83B01"
-            $txtBtnRestart.Text = "INICIAR SERVICO"
-            $txtBtnRestart.Foreground = "#107C10"
-        }
+    $proc = Get-Process -Name "octoprint" -ErrorAction SilentlyContinue
+    if ($proc) {
+        $txtServiceStatus.Text = "RODANDO"
+        $txtServiceStatus.Foreground = "#107C10"
+        $txtBtnRestart.Text = "DESLIGAR OCTOPRINT"
+        $txtBtnRestart.Foreground = "#D83B01"
     } else {
-        $txtServiceStatus.Text = "NAO INSTALADO/ENCONTRADO"
-        $txtServiceStatus.Foreground = "#777777"
-        $txtBtnRestart.Text = "SERVICO INDISPONIVEL"
-        $txtBtnRestart.Foreground = "#777777"
+        $txtServiceStatus.Text = "PARADO"
+        $txtServiceStatus.Foreground = "#D83B01"
+        $txtBtnRestart.Text = "LIGAR OCTOPRINT"
+        $txtBtnRestart.Foreground = "#107C10"
     }
 }
 
@@ -114,16 +107,9 @@ $btnStart.Add_Click({
     $txtStatus.Text = "Verificando servico do OctoPrint..."
     $btnStart.Dispatcher.Invoke([Action]{}, [Windows.Threading.DispatcherPriority]::Render)
     
-    $serviceName = "OctoPrint"
-    $service = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
+    $proc = Get-Process -Name "octoprint" -ErrorAction SilentlyContinue
 
-    if ($service) {
-        if ($service.Status -ne "Running") {
-            $txtStatus.Text = "Iniciando o servico do OctoPrint..."
-            $btnStart.Dispatcher.Invoke([Action]{}, [Windows.Threading.DispatcherPriority]::Render)
-            Start-Service -Name $serviceName
-        }
-    } else {
+    if (-not $proc) {
         $octoprintExe = "D:\Impressao3D\OctoPrint\venv\Scripts\octoprint.exe"
         if (Test-Path $octoprintExe) {
             $txtStatus.Text = "Iniciando processo em segundo plano..."
@@ -142,31 +128,23 @@ $btnStart.Add_Click({
 })
 
 $btnRestart.Add_Click({
-    $serviceName = "OctoPrint"
-    $service = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
+    $proc = Get-Process -Name "octoprint" -ErrorAction SilentlyContinue
     
-    if ($service) {
-        if ($service.Status -eq "Running") {
-            $txtStatus.Text = "Reiniciando o servico... Por favor, aguarde."
-            $btnRestart.Dispatcher.Invoke([Action]{}, [Windows.Threading.DispatcherPriority]::Render)
-            try {
-                Restart-Service -Name $serviceName -Force
-                $txtStatus.Text = "Servico reiniciado com sucesso!"
-            } catch {
-                $txtStatus.Text = "Erro: Rode o Painel como Administrador para reiniciar servicos."
-            }
-        } else {
-            $txtStatus.Text = "Iniciando o servico... Por favor, aguarde."
-            $btnRestart.Dispatcher.Invoke([Action]{}, [Windows.Threading.DispatcherPriority]::Render)
-            try {
-                Start-Service -Name $serviceName
-                $txtStatus.Text = "Servico iniciado com sucesso!"
-            } catch {
-                $txtStatus.Text = "Erro: Rode o Painel como Administrador para iniciar servicos."
-            }
-        }
+    if ($proc) {
+        $txtStatus.Text = "Desligando o servidor... Por favor, aguarde."
+        $btnRestart.Dispatcher.Invoke([Action]{}, [Windows.Threading.DispatcherPriority]::Render)
+        Stop-Process -Name "octoprint" -Force -ErrorAction SilentlyContinue
+        $txtStatus.Text = "OctoPrint desligado com sucesso!"
     } else {
-        $txtStatus.Text = "Servico do OctoPrint nao foi encontrado."
+        $txtStatus.Text = "Iniciando o servidor... Por favor, aguarde."
+        $btnRestart.Dispatcher.Invoke([Action]{}, [Windows.Threading.DispatcherPriority]::Render)
+        $octoprintExe = "D:\Impressao3D\OctoPrint\venv\Scripts\octoprint.exe"
+        if (Test-Path $octoprintExe) {
+            Start-Process -FilePath $octoprintExe -ArgumentList "serve" -WindowStyle Hidden
+            $txtStatus.Text = "OctoPrint iniciado com sucesso!"
+        } else {
+            $txtStatus.Text = "Arquivo nao encontrado."
+        }
     }
 })
 
