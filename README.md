@@ -5,7 +5,7 @@ Este projeto contém scripts e uma interface gráfica (Painel) criados para faci
 ## 📁 Estrutura de Arquivos
 
 - **PainelOctoPrintWPF.ps1**: O coração da interface. Script em PowerShell utilizando WPF (Windows Presentation Foundation) para gerar uma janela nativa, moderna e interativa.
-- **PainelOctoPrint.vbs**: Script "lançador" invisível. Ele executa o Painel do PowerShell sem abrir a janela preta do console (Prompt de Comando) de fundo.
+- **PainelOctoPrint.exe**: O arquivo executável principal. Compilado a partir do script para exibir o ícone nativamente na barra de tarefas e rodar a interface graficamente.
 - **octoprint.png / octoprint.ico**: Arquivos de imagem do logo oficial do OctoPrint usados na interface e no atalho.
 - **IniciarComunicador.ps1** / **AtualizarOctoPrint.ps1**: (Opcionais/Integrados) Scripts com as lógicas separadas caso deseje rodá-las sem a interface gráfica.
 
@@ -13,7 +13,7 @@ Este projeto contém scripts e uma interface gráfica (Painel) criados para faci
 
 ## 🚀 Como Usar o Painel
 
-Ao abrir o script `PainelOctoPrint.vbs` (ou seu atalho respectivo), o sistema checa o status do serviço do OctoPrint no Windows e adapta os botões automaticamente:
+Ao abrir o programa `PainelOctoPrint.exe` (ou seu atalho respectivo), o sistema checa o status do serviço do OctoPrint no Windows e adapta os botões automaticamente:
 1. **ABRIR / INICIAR COMUNICADOR**: Liga o serviço do OctoPrint no Windows e abre o navegador em `http://localhost:5000`.
 2. **REINICIAR SERVICO**: (Aparece apenas quando já está rodando) Útil caso a comunicação USB com a impressora trave e precise de um reset.
 3. **ATUALIZAR OCTOPRINT**: Baixa a versão mais recente do instalador do GitHub e atualiza silenciosamente.
