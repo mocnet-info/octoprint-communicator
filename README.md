@@ -4,21 +4,19 @@ Este projeto contém scripts e uma interface gráfica (Painel) criados para faci
 
 ## 📁 Estrutura de Arquivos
 
-Os arquivos estão localizados em `D:\Projetos\ComunicadorOctoPrint` e a instalação do OctoPrint encontra-se em `D:\Impressao3D\OctoPrint`.
-
 - **PainelOctoPrintWPF.ps1**: O coração da interface. Script em PowerShell utilizando WPF (Windows Presentation Foundation) para gerar uma janela nativa, moderna e interativa.
 - **PainelOctoPrint.vbs**: Script "lançador" invisível. Ele executa o Painel do PowerShell sem abrir a janela preta do console (Prompt de Comando) de fundo.
-- **octoprint.png / octoprint.ico**: Arquivos de imagem do logo oficial do OctoPrint usados na interface e no atalho da Área de Trabalho.
+- **octoprint.png / octoprint.ico**: Arquivos de imagem do logo oficial do OctoPrint usados na interface e no atalho.
 - **IniciarComunicador.ps1** / **AtualizarOctoPrint.ps1**: (Opcionais/Integrados) Scripts com as lógicas separadas caso deseje rodá-las sem a interface gráfica.
+
+*Nota: Os scripts do painel se baseiam na detecção e instalação oficial do `OctoPrint-WindowsInstaller` que roda como serviço (OctoPrint) no sistema Windows.*
 
 ## 🚀 Como Usar o Painel
 
-Há um atalho na sua Área de Trabalho chamado **Painel OctoPrint**. 
-
-Ao abrir o painel, o sistema checa o status do serviço do OctoPrint no Windows e adapta os botões automaticamente:
-1. **INICIAR SERVICO**: Liga o serviço do OctoPrint no Windows e abre o navegador em `http://localhost:5000`.
+Ao abrir o script `PainelOctoPrint.vbs` (ou seu atalho respectivo), o sistema checa o status do serviço do OctoPrint no Windows e adapta os botões automaticamente:
+1. **ABRIR / INICIAR COMUNICADOR**: Liga o serviço do OctoPrint no Windows e abre o navegador em `http://localhost:5000`.
 2. **REINICIAR SERVICO**: (Aparece apenas quando já está rodando) Útil caso a comunicação USB com a impressora trave e precise de um reset.
-3. **ATUALIZAR OCTOPRINT**: Baixa a versão mais recente do `OctoPrint-WindowsInstaller` do GitHub e instala silenciosamente por cima da versão atual.
+3. **ATUALIZAR OCTOPRINT**: Baixa a versão mais recente do instalador do GitHub e atualiza silenciosamente.
 
 ## 🔌 Configurações de Conexão
 
@@ -38,5 +36,4 @@ Para enviar o G-Code e mandar imprimir diretamente do fatiador:
 3. Aperte o botão "Testar" para validar a comunicação!
 
 ## ⚙️ Manutenção
-- Caso haja algum erro ao Iniciar/Reiniciar o serviço ou ao Atualizar, tente **Executar o Painel como Administrador** (clique com o botão direito no atalho -> Executar como Administrador).
-- Toda a instalação raiz do OctoPrint e de seu ambiente virtual Python está preservada em `D:\Impressao3D\OctoPrint`.
+- Caso haja algum erro ao Iniciar/Reiniciar o serviço ou ao Atualizar, tente rodar o Painel como **Administrador** (algumas máquinas exigem isso para parar ou iniciar serviços no Windows).
